@@ -4,9 +4,46 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Assignment_DataStorage"
+        xmlns:view="clr-namespace:Assignment_DataStorage.Views"
+        xmlns:viewmodels="clr-namespace:Assignment_DataStorage.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <!-- Top Bar -->
+        <StackPanel Grid.Row="0"
+                    Grid.ColumnSpan="2">
+            <TextBlock Text="Top Bar" />
+        </StackPanel>
+        <!-- Navigation Bar -->
+        <StackPanel Grid.Row="1"
+                    Grid.Column="0">
+            <Button Content="A" Command="{Binding GoToViewAllCommand}" />
+            <Button Content="+" Command="{Binding GoToAddTicketCommand}"/>
+            <Button Content="S" Command="{Binding GoToViewSingleCommand}"/>
+        </StackPanel>
+        <!-- Main Content -->
+        <ContentControl Grid.Column="1"
+                        Grid.Row="1"
+                        Content="{Binding CurrentViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type viewmodels:ViewAllViewModel}">
+                    <view:ViewAllView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:ViewSingleViewModel}">
+                    <view:ViewSingleView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:AddTicketViewModel}">
+                    <view:AddTicketView />
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
     </Grid>
 </Window>
