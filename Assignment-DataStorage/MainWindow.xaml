@@ -22,13 +22,15 @@
                     Grid.ColumnSpan="2">
             <TextBlock Text="Top Bar" />
         </StackPanel>
-        <!-- Navigation Bar -->
-        <StackPanel Grid.Row="1"
-                    Grid.Column="0">
+        <StackPanel Grid.Row="0"
+                    Grid.Column="1"
+                    Orientation="Horizontal">
             <Button Content="A" Command="{Binding GoToViewAllCommand}" />
             <Button Content="+" Command="{Binding GoToAddTicketCommand}"/>
             <Button Content="S" Command="{Binding GoToViewSingleCommand}"/>
         </StackPanel>
+        <!-- View All Tickets Bar -->
+        
         <!-- Main Content -->
         <ContentControl Grid.Column="1"
                         Grid.Row="1"

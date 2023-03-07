@@ -29,7 +29,7 @@ namespace Assignment_DataStorage.Models.Entities
         public string PhoneNumber { get; set; } = null!;
 
         
-        public DateTime CreatedAt { get; set; }
+        public DateTime CustomerCreatedAt { get; set; }
 
         public ICollection<TicketEntity> Tickets = new HashSet<TicketEntity>();
 

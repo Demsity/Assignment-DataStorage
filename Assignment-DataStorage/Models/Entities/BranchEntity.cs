@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Assignment_DataStorage.Models.Entities
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class BranchEntity
     {
         public int Id { get; set; }

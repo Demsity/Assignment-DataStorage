@@ -11,7 +11,7 @@ namespace Assignment_DataStorage.Models.Entities
         public string Description { get; set; } = null!;
 
         
-        public DateTime CreatedAt { get; set; }
+        public DateTime TicketCreatedAt { get; set; }
 
         public int CommentId { get; set; }
         public CommentEntity? Comment { get; set; }

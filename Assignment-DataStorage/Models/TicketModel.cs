@@ -12,4 +12,8 @@ internal class TicketModel
 
     public string Description { get; set; } = null!;
 
+    // Customer 
+
+
+
 }

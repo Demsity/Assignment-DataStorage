@@ -10,7 +10,7 @@ namespace Assignment_DataStorage.Models.Entities
         public string Comment { get; set; } = null!;
 
         
-        public DateTime CreatedAt { get; set; }
+        public DateTime CommentCreatedAt { get; set; }
 
         [Key]
         public int TicketId { get; set; }

@@ -32,9 +32,12 @@ namespace Assignment_DataStorage.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Branches");
                 });
@@ -42,21 +45,18 @@ namespace Assignment_DataStorage.Migrations
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>
                 {
                     b.Property<int>("TicketId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TicketId"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CommentCreatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("TicketId");
 
-                    b.ToTable("CommentEntity");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CustomerEntity", b =>
@@ -67,7 +67,7 @@ namespace Assignment_DataStorage.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CustomerCreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -129,9 +129,6 @@ namespace Assignment_DataStorage.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
@@ -142,12 +139,12 @@ namespace Assignment_DataStorage.Migrations
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("TicketCreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
-
-                    b.HasIndex("CommentId")
-                        .IsUnique();
 
                     b.HasIndex("CustomerId");
 
@@ -156,17 +153,22 @@ namespace Assignment_DataStorage.Migrations
                     b.ToTable("Tickets");
                 });
 
+            modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>
+                {
+                    b.HasOne("Assignment_DataStorage.Models.Entities.TicketEntity", "Ticket")
+                        .WithOne("Comment")
+                        .HasForeignKey("Assignment_DataStorage.Models.Entities.CommentEntity", "TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.TicketEntity", b =>
                 {
                     b.HasOne("Assignment_DataStorage.Models.Entities.BranchEntity", "Branch")
                         .WithMany("Tickets")
                         .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Assignment_DataStorage.Models.Entities.CommentEntity", "Comment")
-                        .WithOne("Ticket")
-                        .HasForeignKey("Assignment_DataStorage.Models.Entities.TicketEntity", "CommentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -184,8 +186,6 @@ namespace Assignment_DataStorage.Migrations
 
                     b.Navigation("Branch");
 
-                    b.Navigation("Comment");
-
                     b.Navigation("Customer");
 
                     b.Navigation("Status");
@@ -196,15 +196,14 @@ namespace Assignment_DataStorage.Migrations
                     b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>
-                {
-                    b.Navigation("Ticket")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.StatusEntity", b =>
                 {
                     b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("Assignment_DataStorage.Models.Entities.TicketEntity", b =>
+                {
+                    b.Navigation("Comment");
                 });
 #pragma warning restore 612, 618
         }
