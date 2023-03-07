@@ -44,4 +44,5 @@ internal class DataContext : DbContext
     public DbSet<BranchEntity> Branches { get; set; } = null!;
     public DbSet<StatusEntity> Status { get; set; } = null!;
     public DbSet<TicketEntity> Tickets { get; set; } = null!;
+    public DbSet<CommentEntity> Comments { get; set; } = null!;
 }
