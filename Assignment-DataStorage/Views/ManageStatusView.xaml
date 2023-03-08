@@ -4,9 +4,68 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Assignment_DataStorage.Views"
+             xmlns:viewmodels="clr-namespace:Assignment_DataStorage.ViewModels"
+             d:DataContext="{d:DesignData Type=viewmodels:ManageStatusViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Manage Status" />
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- titles -->
+        <TextBlock Text="Statuses"
+                   Grid.Column="0"
+                   Grid.Row="0"/>
+        <TextBlock Text="Add new status"
+                   Grid.Column="1"
+                   Grid.Row="0"/>
+        <!-- List of Branches -->
+        <Grid Grid.Row="1"
+              Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <ListView  Background="Transparent"
+                  ItemsSource="{Binding Statuses}"
+                  Margin="5"
+                  SelectedItem="{Binding SelectedStatus}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Status}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Grid.Row="1"
+                    Command="{Binding DeleteStatusFromDBAsyncCommand}"
+                    Content="Delete Status"/>
+        </Grid>
+
+
+        <!-- Add New Branch -->
+        <Grid Grid.Row="1"
+              Grid.Column="1"
+              Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBox Text="{Binding Status.Status, Mode=TwoWay}" />
+                <TextBlock Text="{Binding SelectedStatus.Status}" />
+            </StackPanel>
+            <Button Height="50"
+                    Width="100"
+                    Content="Save"
+                    Grid.Row="1"
+                    Command="{Binding SaveStatusToDBAsyncCommand}"/>
+        </Grid>
     </Grid>
 </UserControl>
