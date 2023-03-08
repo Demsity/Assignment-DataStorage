@@ -25,9 +25,21 @@
         <StackPanel Grid.Row="0"
                     Grid.Column="1"
                     Orientation="Horizontal">
-            <Button Content="A" Command="{Binding GoToViewAllCommand}" />
-            <Button Content="+" Command="{Binding GoToAddTicketCommand}"/>
-            <Button Content="S" Command="{Binding GoToViewSingleCommand}"/>
+            <Button Content="A" Command="{Binding GoToViewAllCommand}"
+                    Width="50"
+                    Margin="5"/>
+            <Button Content="+" Command="{Binding GoToAddTicketCommand}"
+                    Width="50"
+                    Margin="5"/>
+            <Button Content="S" Command="{Binding GoToViewSingleCommand}"
+                    Width="50"
+                    Margin="5"/>
+            <Button Content="B" Command="{Binding GoToManageBranchCommand}"
+                    Width="50"
+                    Margin="5"/>
+            <Button Content="ST" Command="{Binding GoToManageStatusCommand}"
+                    Width="50"
+                    Margin="5"/>
         </StackPanel>
         <!-- View All Tickets Bar -->
         
@@ -44,6 +56,12 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:AddTicketViewModel}">
                     <view:AddTicketView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:ManageBranchViewModel}">
+                    <view:ManageBranchView />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:ManageStatusViewModel}">
+                    <view:ManageStatusView />
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>

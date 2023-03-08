@@ -39,7 +39,7 @@ namespace Assignment_DataStorage.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
                 });
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>
@@ -56,7 +56,7 @@ namespace Assignment_DataStorage.Migrations
 
                     b.HasKey("TicketId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CustomerEntity", b =>
@@ -94,7 +94,7 @@ namespace Assignment_DataStorage.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.StatusEntity", b =>
@@ -112,7 +112,7 @@ namespace Assignment_DataStorage.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Status");
+                    b.ToTable("Status", (string)null);
                 });
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.TicketEntity", b =>
@@ -150,7 +150,7 @@ namespace Assignment_DataStorage.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", (string)null);
                 });
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>

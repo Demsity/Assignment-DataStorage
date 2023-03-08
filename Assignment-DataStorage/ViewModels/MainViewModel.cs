@@ -31,6 +31,18 @@ public partial class MainViewModel : ObservableObject
         CurrentViewModel = new AddTicketViewModel();
     }
 
+    [RelayCommand]
+    private void GoToManageBranch()
+    {
+        CurrentViewModel = new ManageBranchViewModel();
+    }
+
+    [RelayCommand]
+    private void GoToManageStatus()
+    {
+        CurrentViewModel = new ManageStatusViewModel();
+    }
+
     public MainViewModel()
     {
         currentViewModel = new ViewAllViewModel();
