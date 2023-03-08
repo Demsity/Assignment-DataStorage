@@ -40,4 +40,14 @@ internal class BranchService
 
         return _branches;
     }
+
+    public static async Task DeleteBranchAsync(BranchModel model)
+    {
+        var _branch = await _dataContext.Branches.FirstOrDefaultAsync(x => x.Name == model.Name);
+        if (_branch != null)
+        {
+            _dataContext.Branches.Remove(_branch);
+            await _dataContext.SaveChangesAsync();
+        }
+    }
 }

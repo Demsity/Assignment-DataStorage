@@ -17,10 +17,13 @@ internal partial class ManageBranchViewModel : ObservableObject
 	private ObservableCollection<BranchModel> branches = new();
 
 	[ObservableProperty]
+	private BranchModel selectedBranch = null!;
+
+	[ObservableProperty]
 	private BranchModel branch = null!;
 
     [RelayCommand]
-    private async void SaveBranchToDB()
+    private async void SaveBranchToDBAsync()
     {
         if (Branch != null)
         {
@@ -29,6 +32,16 @@ internal partial class ManageBranchViewModel : ObservableObject
             populateBranchCollectionAsync();
         }
     }
+
+	[RelayCommand]
+	private async void DeleteBranchFromDBAsync()
+	{
+		if (SelectedBranch != null)
+		{
+			await BranchService.DeleteBranchAsync(SelectedBranch);
+            populateBranchCollectionAsync();
+        }
+	}
     public ManageBranchViewModel()
 	{
 		populateBranchCollectionAsync();
