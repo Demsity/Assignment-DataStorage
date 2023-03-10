@@ -33,11 +33,22 @@ public partial class ViewAllViewModel : ObservableObject
 
     partial void OnSelectedTicketChanging(TicketModel value)
     {
-		if (value.BranchId >0 && value.StatusId >0)
+		if (value != null)
 		{
-			SelectedBranch = Branches.FirstOrDefault(x => x.Id == value.BranchId)!;
-			SelectedStatus = Statuses.FirstOrDefault(x => x.Id == value.StatusId)!;
-        }
+            if (value.BranchId > 0 && value.StatusId > 0)
+            {
+                SelectedBranch = Branches.FirstOrDefault(x => x.Id == value.BranchId)!;
+                SelectedStatus = Statuses.FirstOrDefault(x => x.Id == value.StatusId)!;
+            } else
+			{
+                SelectedBranch = new();
+                SelectedStatus = new();
+            }
+        } else
+		{
+			SelectedBranch = new();
+			SelectedStatus = new();
+		}
 
     }
 
@@ -47,7 +58,8 @@ public partial class ViewAllViewModel : ObservableObject
 		var _ticket = await TicketService.CheckIfTicketExsistsAsync(SelectedTicket);
 		if(_ticket)
 		{
-			// Update
+			await TicketService.UpdateTicketAsync(SelectedTicket);
+			populateTicketsCollectionAsync();
 		} else
 		{
 			await TicketService.SaveTicketAsync(SelectedTicket, SelectedBranch, SelectedStatus);
@@ -57,10 +69,19 @@ public partial class ViewAllViewModel : ObservableObject
 	}
 
 	[RelayCommand]
+	private async void DeleteTicket()
+	{
+		await TicketService.DeleteTicketAsync(SelectedTicket);
+		populateTicketsCollectionAsync();
+	}
+
+	[RelayCommand]
 	private void ClearForm()
 	{
 		SelectedTicket = new();
-	}
+        SelectedBranch = new();
+        SelectedStatus = new();
+    }
 
 	public ViewAllViewModel()
 	{

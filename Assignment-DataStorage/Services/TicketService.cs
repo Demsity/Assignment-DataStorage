@@ -136,52 +136,86 @@ namespace Assignment_DataStorage.Services
 
         }
 
-        /*
+        
 
-        public static async Task UpdateAsync(CustomerModel model)
+        public static async Task UpdateTicketAsync(TicketModel model)
         {
-            var _customer = await _context.Customers.Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == model.Id);
-            if (_customer != null)
+            var _ticket = await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comment).FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (_ticket != null)
             {
-                if (!string.IsNullOrEmpty(model.StreetName) || !string.IsNullOrEmpty(model.PostalCode) || !string.IsNullOrEmpty(model.City))
+                // Update Customer
+                if (!string.IsNullOrEmpty(model.FirstName) || !string.IsNullOrEmpty(model.LastName) || !string.IsNullOrEmpty(model.Email) || !string.IsNullOrEmpty(model.PhoneNumber))
                 {
-                    var _address = await _context.Addresses.FirstOrDefaultAsync(x => x.StreetName == model.StreetName && x.PostalCode == model.PostalCode && x.City == model.City);
-                    if (_address != null)
-                        _customer.AddressId = _address.Id;
-                    else
+                    var _customer = await _dataContext.Customers.FirstOrDefaultAsync(x =>  x.Email == model.Email);
+                    if (_customer != null)
                     {
-                        var address = new Address
+                        _customer.FirstName= model.FirstName;
+                        _customer.LastName= model.LastName;
+                        _customer.Email= model.Email;
+                        _customer.PhoneNumber= model.PhoneNumber;
+
+                        _dataContext.Customers.Update(_customer);
+                        await _dataContext.SaveChangesAsync();
+                    }
+                }
+                // Update Comment
+                if (!string.IsNullOrEmpty(model.Comment))
+                {
+                    var _comment = await _dataContext.Comments.FirstOrDefaultAsync(x => x.TicketId == model.Id);
+                    if (_comment != null)
+                    {
+                        if (_ticket.Comment != null)
                         {
-                            StreetName = model.StreetName,
-                            PostalCode = model.PostalCode,
-                            City = model.City
+                            _ticket.Comment.Comment = model.Comment;
+                            _ticket.Comment.CommentCreatedAt = DateTime.Now;
+
+                            _dataContext.Comments.Update(_comment);
+                            await _dataContext.SaveChangesAsync();
+
+                        } else
+                        {
+                            var comment = new CommentEntity
+                            {
+                                TicketId = (int)model.Id!,
+                                Comment = model.Comment,
+                                CommentCreatedAt = DateTime.Now,
+
+                            };
+
+                            _dataContext.Comments.Add(comment);
+                            await _dataContext.SaveChangesAsync();
+                        }
+                    } else
+                    {
+                        var comment = new CommentEntity
+                        {
+                            TicketId = (int)model.Id!,
+                            Comment = model.Comment,
+                            CommentCreatedAt = DateTime.Now,
+
                         };
 
-                        _context.Add(address);
-                        await _context.SaveChangesAsync();
-                        _customer.AddressId = address.Id;
+                        _dataContext.Comments.Add(comment);
+                        await _dataContext.SaveChangesAsync();
                     }
-
                 }
 
-                if (!string.IsNullOrEmpty(model.FirstName))
-                    _customer.FirstName = model.FirstName;
+                // Update Branch and status
+                _ticket.BranchId = model.BranchId;
+                _ticket.StatusId = model.StatusId;
 
-                if (!string.IsNullOrEmpty(model.LastName))
-                    _customer.LastName = model.LastName;
+                // Update Description
+                if (!string.IsNullOrEmpty(model.Description))
+                    _ticket.Description = model.Description;
 
-                if (!string.IsNullOrEmpty(model.Email))
-                    _customer.Email = model.Email;
 
-                if (!string.IsNullOrEmpty(model.PhoneNumber))
-                    _customer.PhoneNumber = model.PhoneNumber;
 
-                _context.Update(_customer);
-                await _context.SaveChangesAsync();
+                _dataContext.Tickets.Update(_ticket);
+                await _dataContext.SaveChangesAsync();
 
             }
         }
-        */
+        
         public static async Task DeleteTicketAsync(TicketModel model)
         {
             var _ticket = await _dataContext.Tickets.FirstOrDefaultAsync(x => x.Id == model.Id);
