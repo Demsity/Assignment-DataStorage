@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Assignment_DataStorage.Models;
 
-internal class TicketModel
+public class TicketModel
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     public string Description { get; set; } = null!;
 
-    public DateTime TicketCreatedAt { get; set; }
+    public DateTime? TicketCreatedAt { get; set; }
 
 
     // Customer 
@@ -20,16 +20,18 @@ internal class TicketModel
     public string LastName { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string PhoneNumber { get; set; } = null!;
-    public DateTime CustomerCreatedAt { get; set; }
+    public DateTime? CustomerCreatedAt { get; set; }
 
     // Comment
-    public string Comment { get; set; } = null!;
-    public DateTime CommentCreatedAt { get; set; }
+    public string? Comment { get; set; }
+    public DateTime? CommentCreatedAt { get; set; }
 
     // Branch 
+    public int BranchId { get; set; }
     public string Branch { get; set; } = null!;
 
     // Status
+    public int StatusId { get; set; }
     public string Status { get; set; } = null!;
 
 }

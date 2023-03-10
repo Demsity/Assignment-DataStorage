@@ -16,11 +16,12 @@ namespace Assignment_DataStorage.Services
     {
         private static DataContext _dataContext = new();
 
-        public static async Task SaveTicketAsync(TicketModel model)
+        public static async Task SaveTicketAsync(TicketModel model, BranchModel branch, StatusModel status)
         {
             var _ticket = new TicketEntity
             {
                 Description= model.Description,
+                TicketCreatedAt= DateTime.Now,
               
             };
 
@@ -37,20 +38,31 @@ namespace Assignment_DataStorage.Services
                     CustomerCreatedAt= DateTime.Now
                 };
 
-            var _commentEntity = await _dataContext.Comments.FirstOrDefaultAsync(x => x.TicketId == model.Id);
-            if (_commentEntity != null)
-                _ticket.CommentId = _commentEntity.TicketId;
-            else
+            if (model.Comment != null)
+            {
                 _ticket.Comment = new CommentEntity
                 {
-                    Comment= model.Comment,
+                    TicketId = _ticket.Id,
+                    Comment = model.Comment,
                     CommentCreatedAt = DateTime.Now
                 };
+            }
 
-         
-            _ticket.Branch.Name = model.Branch;
+           
+            var _branch = await _dataContext.Branches.FirstOrDefaultAsync(x => x.Id== branch.Id);
+            if (_branch != null)
+            {
+                _ticket.BranchId = _branch.Id;
+                _ticket.Branch = _branch;
+            }
+            
 
-            _ticket.Status.Status = model.Status;
+            var _status = await _dataContext.Status.FirstOrDefaultAsync(x => x.Id == status.Id);
+            if (_status != null)
+            {
+                _ticket.Status = _status;
+                _ticket.StatusId = _status.Id;
+            }
 
             _dataContext.Tickets.Add(_ticket);
             await _dataContext.SaveChangesAsync();
@@ -70,35 +82,61 @@ namespace Assignment_DataStorage.Services
                     LastName = _ticket.Customer.LastName,
                     Email = _ticket.Customer.Email,
                     PhoneNumber = _ticket.Customer.PhoneNumber,
+                    BranchId = _ticket.Branch.Id,
                     Branch = _ticket.Branch.Name,
+                    StatusId = _ticket.Status.Id,
                     Status = _ticket.Status.Status,
-                    Comment = _ticket.Comment!.Comment,
+                    Comment = _ticket.Comment?.Comment,
+                    CommentCreatedAt = _ticket.Comment?.CommentCreatedAt,
+                    TicketCreatedAt = _ticket.TicketCreatedAt
                 });
 
             return _tickets;
         }
 
-        /*
 
-        public static async Task<CustomerModel> GetAsync(string email)
+        
+
+        public static async Task<TicketModel> GetTicketAsync(TicketModel model)
         {
-            var _customer = await _context.Customers.Include(x => x.Address).FirstOrDefaultAsync(x => x.Email == email);
-            if (_customer != null)
-                return new CustomerModel
+            var _ticket = await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comment).Include(x => x.Branch).Include(x => x.Status).FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (_ticket != null)
+                return new TicketModel
                 {
-                    Id = _customer.Id,
-                    FirstName = _customer.FirstName,
-                    LastName = _customer.LastName,
-                    Email = _customer.Email,
-                    PhoneNumber = _customer.PhoneNumber,
-                    StreetName = _customer.Address.StreetName,
-                    PostalCode = _customer.Address.PostalCode,
-                    City = _customer.Address.City
+                    Id = _ticket.Id,
+                    Description = _ticket.Description,
+                    FirstName = _ticket.Customer.FirstName,
+                    LastName = _ticket.Customer.LastName,
+                    Email = _ticket.Customer.Email,
+                    PhoneNumber = _ticket.Customer.PhoneNumber,
+                    Branch = _ticket.Branch.Name,
+                    Status = _ticket.Status.Status,
+                    Comment = _ticket.Comment!.Comment,
+                    TicketCreatedAt = _ticket.TicketCreatedAt
                 };
 
             else
                 return null!;
         }
+
+        public static async Task<Boolean> CheckIfTicketExsistsAsync(TicketModel model)
+        {
+            try
+            {
+                var _ticket = await _dataContext.Tickets.FirstOrDefaultAsync(x => x.Id == model.Id);
+                if (_ticket != null)
+                    return true;
+
+                else
+                    return false;
+            } catch
+            {
+                return false;
+            }
+
+        }
+
+        /*
 
         public static async Task UpdateAsync(CustomerModel model)
         {
@@ -143,16 +181,16 @@ namespace Assignment_DataStorage.Services
 
             }
         }
-
-        public static async Task DeleteAsync(string email)
+        */
+        public static async Task DeleteTicketAsync(TicketModel model)
         {
-            var customer = await _context.Customers.Include(x => x.Address).FirstOrDefaultAsync(x => x.Email == email);
-            if (customer != null)
+            var _ticket = await _dataContext.Tickets.FirstOrDefaultAsync(x => x.Id == model.Id);
+            if (_ticket != null)
             {
-                _context.Remove(customer);
-                await _context.SaveChangesAsync();
+                _dataContext.Tickets.Remove(_ticket);
+                await _dataContext.SaveChangesAsync();
             }
         }
-        */
+        
     }
 }

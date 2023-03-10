@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assignment_DataStorage.Models;
 
-internal class StatusModel
+public class StatusModel
 {
     public int Id { get; set; }
 
