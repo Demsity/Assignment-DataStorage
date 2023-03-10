@@ -138,7 +138,7 @@ namespace Assignment_DataStorage.Services
 
         
 
-        public static async Task UpdateTicketAsync(TicketModel model)
+        public static async Task UpdateTicketAsync(TicketModel model, BranchModel branch, StatusModel status)
         {
             var _ticket = await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comment).FirstOrDefaultAsync(x => x.Id == model.Id);
             if (_ticket != null)
@@ -201,8 +201,19 @@ namespace Assignment_DataStorage.Services
                 }
 
                 // Update Branch and status
-                _ticket.BranchId = model.BranchId;
-                _ticket.StatusId = model.StatusId;
+                if(_ticket.Branch.Id != branch.Id)
+                {
+                    var _branch = await _dataContext.Branches.FirstOrDefaultAsync(x => x.Id == branch.Id);
+                    if (_branch != null)
+                        _ticket.Branch = _branch;
+                }
+
+                if (_ticket.Status.Id != status.Id)
+                {
+                    var _status = await _dataContext.Status.FirstOrDefaultAsync(x => x.Id == status.Id);
+                    if (_status != null)
+                        _ticket.Status = _status;
+                }
 
                 // Update Description
                 if (!string.IsNullOrEmpty(model.Description))

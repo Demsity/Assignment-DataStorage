@@ -39,10 +39,6 @@ public partial class ViewAllViewModel : ObservableObject
             {
                 SelectedBranch = Branches.FirstOrDefault(x => x.Id == value.BranchId)!;
                 SelectedStatus = Statuses.FirstOrDefault(x => x.Id == value.StatusId)!;
-            } else
-			{
-                SelectedBranch = new();
-                SelectedStatus = new();
             }
         } else
 		{
@@ -52,18 +48,33 @@ public partial class ViewAllViewModel : ObservableObject
 
     }
 
+    partial void OnSelectedBranchChanging(BranchModel value)
+    {
+		if(SelectedTicket != null)
+		{
+            if (SelectedTicket.BranchId > 0)
+            {
+                var _branch = Branches.FirstOrDefault(x => x.Id == SelectedTicket.BranchId);
+                if (SelectedTicket.BranchId != _branch.Id)
+                {
+                    SelectedTicket.BranchId = _branch.Id;
+                    SelectedTicket.Branch = _branch.Name;
+                }
+            }
+        }
+    }
+
     [RelayCommand]
 	private async void SaveTicket()
 	{
 		var _ticket = await TicketService.CheckIfTicketExsistsAsync(SelectedTicket);
 		if(_ticket)
 		{
-			await TicketService.UpdateTicketAsync(SelectedTicket);
+			await TicketService.UpdateTicketAsync(SelectedTicket, SelectedBranch, SelectedStatus);
 			populateTicketsCollectionAsync();
 		} else
 		{
 			await TicketService.SaveTicketAsync(SelectedTicket, SelectedBranch, SelectedStatus);
-			SelectedTicket = new();
 			populateTicketsCollectionAsync();
 		}
 	}
