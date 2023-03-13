@@ -38,16 +38,6 @@ namespace Assignment_DataStorage.Services
                     CustomerCreatedAt= DateTime.Now
                 };
 
-            if (model.Comment != null)
-            {
-                _ticket.Comment = new CommentEntity
-                {
-                    TicketId = _ticket.Id,
-                    Comment = model.Comment,
-                    CommentCreatedAt = DateTime.Now
-                };
-            }
-
            
             var _branch = await _dataContext.Branches.FirstOrDefaultAsync(x => x.Id== branch.Id);
             if (_branch != null)
@@ -73,11 +63,14 @@ namespace Assignment_DataStorage.Services
         {
             var _tickets = new ObservableCollection<TicketModel>();
 
-            foreach (var _ticket in await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comment).Include(x => x.Branch).Include(x => x.Status).ToListAsync())
+            
+
+            foreach (var _ticket in await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comments).Include(x => x.Branch).Include(x => x.Status).ToListAsync())
+            {
                 _tickets.Add(new TicketModel
                 {
                     Id = _ticket.Id,
-                    Description= _ticket.Description,
+                    Description = _ticket.Description,
                     FirstName = _ticket.Customer.FirstName,
                     LastName = _ticket.Customer.LastName,
                     Email = _ticket.Customer.Email,
@@ -86,11 +79,23 @@ namespace Assignment_DataStorage.Services
                     Branch = _ticket.Branch.Name,
                     StatusId = _ticket.Status.Id,
                     Status = _ticket.Status.Status,
-                    Comment = _ticket.Comment?.Comment,
-                    CommentCreatedAt = _ticket.Comment?.CommentCreatedAt,
                     TicketCreatedAt = _ticket.TicketCreatedAt
                 });
 
+            }
+            foreach (var _ticketModel in _tickets)
+            {
+                _ticketModel.Comments = new ObservableCollection<CommentModel>();
+                foreach (var _comment in await _dataContext.Comments.Where(x => x.TicketId == _ticketModel.Id).ToListAsync())
+                    {
+                        
+                        _ticketModel.Comments.Add(new CommentModel
+                        {
+                            Comment = _comment.Comment,
+                            CreatedAt = _comment.CommentCreatedAt
+                        });
+                    }
+            }
             return _tickets;
         }
 
@@ -99,7 +104,7 @@ namespace Assignment_DataStorage.Services
 
         public static async Task<TicketModel> GetTicketAsync(TicketModel model)
         {
-            var _ticket = await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comment).Include(x => x.Branch).Include(x => x.Status).FirstOrDefaultAsync(x => x.Id == model.Id);
+            var _ticket = await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Branch).Include(x => x.Status).FirstOrDefaultAsync(x => x.Id == model.Id);
             if (_ticket != null)
                 return new TicketModel
                 {
@@ -111,7 +116,6 @@ namespace Assignment_DataStorage.Services
                     PhoneNumber = _ticket.Customer.PhoneNumber,
                     Branch = _ticket.Branch.Name,
                     Status = _ticket.Status.Status,
-                    Comment = _ticket.Comment!.Comment,
                     TicketCreatedAt = _ticket.TicketCreatedAt
                 };
 
@@ -140,7 +144,7 @@ namespace Assignment_DataStorage.Services
 
         public static async Task UpdateTicketAsync(TicketModel model, BranchModel branch, StatusModel status)
         {
-            var _ticket = await _dataContext.Tickets.Include(x => x.Customer).Include(x => x.Comment).FirstOrDefaultAsync(x => x.Id == model.Id);
+            var _ticket = await _dataContext.Tickets.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == model.Id);
             if (_ticket != null)
             {
                 // Update Customer
@@ -155,47 +159,6 @@ namespace Assignment_DataStorage.Services
                         _customer.PhoneNumber= model.PhoneNumber;
 
                         _dataContext.Customers.Update(_customer);
-                        await _dataContext.SaveChangesAsync();
-                    }
-                }
-                // Update Comment
-                if (!string.IsNullOrEmpty(model.Comment))
-                {
-                    var _comment = await _dataContext.Comments.FirstOrDefaultAsync(x => x.TicketId == model.Id);
-                    if (_comment != null)
-                    {
-                        if (_ticket.Comment != null)
-                        {
-                            _ticket.Comment.Comment = model.Comment;
-                            _ticket.Comment.CommentCreatedAt = DateTime.Now;
-
-                            _dataContext.Comments.Update(_comment);
-                            await _dataContext.SaveChangesAsync();
-
-                        } else
-                        {
-                            var comment = new CommentEntity
-                            {
-                                TicketId = (int)model.Id!,
-                                Comment = model.Comment,
-                                CommentCreatedAt = DateTime.Now,
-
-                            };
-
-                            _dataContext.Comments.Add(comment);
-                            await _dataContext.SaveChangesAsync();
-                        }
-                    } else
-                    {
-                        var comment = new CommentEntity
-                        {
-                            TicketId = (int)model.Id!,
-                            Comment = model.Comment,
-                            CommentCreatedAt = DateTime.Now,
-
-                        };
-
-                        _dataContext.Comments.Add(comment);
                         await _dataContext.SaveChangesAsync();
                     }
                 }

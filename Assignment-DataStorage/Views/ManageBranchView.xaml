@@ -32,9 +32,12 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <ListView  Background="Transparent"
-                  ItemsSource="{Binding Branches}"
-                  Margin="5"
-                  SelectedItem="{Binding SelectedBranch}">
+                    ItemsSource="{Binding Branches}"
+                    Margin="5"
+                    SelectedItem="{Binding SelectedBranch}"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    ScrollViewer.CanContentScroll="False"
+                    Height="150">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -59,7 +62,6 @@
             </Grid.RowDefinitions>
             <StackPanel>
                 <TextBox Text="{Binding Branch.Name, Mode=TwoWay}" />
-                <TextBlock Text="{Binding SelectedBranch.Name}" />
             </StackPanel>
             <Button Height="50"
                     Width="100"

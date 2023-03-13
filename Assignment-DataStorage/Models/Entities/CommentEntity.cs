@@ -7,12 +7,12 @@ namespace Assignment_DataStorage.Models.Entities
 {
     public class CommentEntity
     {
+        public int Id { get; set; }
         public string Comment { get; set; } = null!;
 
         
         public DateTime CommentCreatedAt { get; set; }
 
-        [Key]
         public int TicketId { get; set; }
         public TicketEntity Ticket { get; set; } = null!;
     }

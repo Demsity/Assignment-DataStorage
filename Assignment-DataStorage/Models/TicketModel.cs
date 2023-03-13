@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Assignment_DataStorage.Models.Entities;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +24,6 @@ public class TicketModel
     public string PhoneNumber { get; set; } = null!;
     public DateTime? CustomerCreatedAt { get; set; }
 
-    // Comment
-    public string? Comment { get; set; }
-    public DateTime? CommentCreatedAt { get; set; }
-
     // Branch 
     public int BranchId { get; set; }
     public string Branch { get; set; } = null!;
@@ -33,5 +31,7 @@ public class TicketModel
     // Status
     public int StatusId { get; set; }
     public string Status { get; set; } = null!;
+
+    public ObservableCollection<CommentModel> Comments { get; set; } = null!;
 
 }

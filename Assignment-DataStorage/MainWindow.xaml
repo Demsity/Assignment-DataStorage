@@ -7,7 +7,8 @@
         xmlns:view="clr-namespace:Assignment_DataStorage.Views"
         xmlns:viewmodels="clr-namespace:Assignment_DataStorage.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Ticket Manager" Height="450" Width="1000"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -19,43 +20,44 @@
         </Grid.ColumnDefinitions>
         <!-- Top Bar -->
         <StackPanel Grid.Row="0"
-                    Grid.ColumnSpan="2">
-            <TextBlock Text="Top Bar" />
+                    Grid.Column="0"
+                    Height="auto"
+                    VerticalAlignment="Center"
+                    Margin="5">
+            <TextBlock Text="Ticket Manager"/>
         </StackPanel>
         <StackPanel Grid.Row="0"
                     Grid.Column="1"
-                    Orientation="Horizontal">
-            <Button Content="A" Command="{Binding GoToViewAllCommand}"
-                    Width="50"
-                    Margin="5"/>
-            <Button Content="+" Command="{Binding GoToAddTicketCommand}"
-                    Width="50"
-                    Margin="5"/>
-            <Button Content="S" Command="{Binding GoToViewSingleCommand}"
-                    Width="50"
-                    Margin="5"/>
-            <Button Content="B" Command="{Binding GoToManageBranchCommand}"
-                    Width="50"
-                    Margin="5"/>
-            <Button Content="ST" Command="{Binding GoToManageStatusCommand}"
-                    Width="50"
-                    Margin="5"/>
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"
+                    Width="auto">
+            <Button Content="Tickets" Command="{Binding GoToViewAllCommand}"
+                    Width="150"
+                    Margin="5"
+                    Padding="5"/>
+            <Button Content="Manage Branches" Command="{Binding GoToManageBranchCommand}"
+                    Width="150"
+                    Margin="5"
+                    Padding="5"/>
+            <Button Content="Manage Status" Command="{Binding GoToManageStatusCommand}"
+                    Width="150"
+                    Margin="5"
+                    Padding="5"/>
         </StackPanel>
-        <!-- View All Tickets Bar -->
         
         <!-- Main Content -->
-        <ContentControl Grid.Column="1"
+        <ContentControl Grid.Column="0"
+                        Grid.ColumnSpan="2"
                         Grid.Row="1"
-                        Content="{Binding CurrentViewModel}">
+                        Margin="10"
+                        Content="{Binding CurrentViewModel}"
+                        Width="950"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type viewmodels:ViewAllViewModel}">
                     <view:ViewAllView />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type viewmodels:ViewSingleViewModel}">
-                    <view:ViewSingleView />
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type viewmodels:AddTicketViewModel}">
-                    <view:AddTicketView />
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:ManageBranchViewModel}">
                     <view:ManageBranchView />

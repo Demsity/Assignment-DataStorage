@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Assignment_DataStorage.Models.Entities
@@ -10,11 +12,9 @@ namespace Assignment_DataStorage.Models.Entities
 
         public string Description { get; set; } = null!;
 
-        
         public DateTime TicketCreatedAt { get; set; }
 
-        public int CommentId { get; set; }
-        public CommentEntity? Comment { get; set; }
+        public virtual ObservableCollection<CommentEntity> Comments { get; set; } = new ObservableCollection<CommentEntity>();
 
         public int CustomerId { get; set; }
         public CustomerEntity Customer { get; set; } = null!;

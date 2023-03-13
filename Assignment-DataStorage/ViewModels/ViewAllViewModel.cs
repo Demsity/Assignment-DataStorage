@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Assignment_DataStorage.ViewModels;
 
@@ -21,6 +22,12 @@ public partial class ViewAllViewModel : ObservableObject
 
 	[ObservableProperty]
 	private ObservableCollection<StatusModel> statuses = null!;
+
+	[ObservableProperty]
+	private ObservableCollection<CommentModel> comments = null!;
+
+	[ObservableProperty]
+	private CommentModel newComment = null!;
 
 	[ObservableProperty]
 	private TicketModel selectedTicket = null!;
@@ -40,12 +47,20 @@ public partial class ViewAllViewModel : ObservableObject
                 SelectedBranch = Branches.FirstOrDefault(x => x.Id == value.BranchId)!;
                 SelectedStatus = Statuses.FirstOrDefault(x => x.Id == value.StatusId)!;
             }
+
+
         } else
 		{
 			SelectedBranch = new();
 			SelectedStatus = new();
+			Comments = new();
 		}
 
+    }
+
+    partial void OnSelectedTicketChanged(TicketModel value)
+    {
+		populateCommentCollection();
     }
 
     partial void OnSelectedBranchChanging(BranchModel value)
@@ -79,6 +94,7 @@ public partial class ViewAllViewModel : ObservableObject
 		}
 	}
 
+
 	[RelayCommand]
 	private async void DeleteTicket()
 	{
@@ -94,6 +110,20 @@ public partial class ViewAllViewModel : ObservableObject
         SelectedStatus = new();
     }
 
+	[RelayCommand]
+	private async void AddCommentToDB()
+	{
+		if (SelectedTicket != null && NewComment.Comment != null)
+		{
+            await CommentService.SaveCommentAsync(SelectedTicket, NewComment);
+			populateTicketsCollectionAsync();
+        }else
+		{
+			MessageBox.Show("Please Select Ticket and Add a new Comment");
+		}
+
+	}
+
 	public ViewAllViewModel()
 	{
 		Tickets = new();
@@ -102,6 +132,7 @@ public partial class ViewAllViewModel : ObservableObject
 		SelectedTicket= new();
 		SelectedBranch= new();
 		SelectedStatus= new();
+		NewComment= new();
 		populateTicketsCollectionAsync();
 		populateBranchesCollectionAsync();
 		populateStatusesCollectionAsync();
@@ -109,7 +140,9 @@ public partial class ViewAllViewModel : ObservableObject
 
 	private async void populateTicketsCollectionAsync()
 	{
+		TicketModel _tempTicket = SelectedTicket;
 		Tickets = (ObservableCollection<TicketModel>)await TicketService.GetAllTicketsAsync();
+		SelectedTicket = (TicketModel)Tickets.FirstOrDefault(x => x.Id == _tempTicket.Id)!;
 
 	}
 
@@ -122,5 +155,16 @@ public partial class ViewAllViewModel : ObservableObject
 	{
 		Statuses = (ObservableCollection<StatusModel>)await StatusService.GetAllStatusAsync();
 	}
+
+	private void populateCommentCollection()
+	{
+        if (SelectedTicket != null && SelectedTicket.Comments != null && Comments != null)
+        {
+            foreach (var comment in SelectedTicket.Comments!)
+            {
+                Comments.Add(comment);
+            }
+        }
+    }
 
 }

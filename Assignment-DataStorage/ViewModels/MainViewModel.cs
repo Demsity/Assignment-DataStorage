@@ -20,18 +20,6 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void GoToViewSingle()
-    {
-        CurrentViewModel = new ViewSingleViewModel();
-    }
-
-    [RelayCommand]
-    private void GoToAddTicket()
-    {
-        CurrentViewModel = new AddTicketViewModel();
-    }
-
-    [RelayCommand]
     private void GoToManageBranch()
     {
         CurrentViewModel = new ManageBranchViewModel();

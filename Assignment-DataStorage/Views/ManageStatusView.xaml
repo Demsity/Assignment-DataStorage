@@ -34,7 +34,10 @@
             <ListView  Background="Transparent"
                   ItemsSource="{Binding Statuses}"
                   Margin="5"
-                  SelectedItem="{Binding SelectedStatus}">
+                  SelectedItem="{Binding SelectedStatus}"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    ScrollViewer.CanContentScroll="False"
+                    Height="150">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -59,7 +62,6 @@
             </Grid.RowDefinitions>
             <StackPanel>
                 <TextBox Text="{Binding Status.Status, Mode=TwoWay}" />
-                <TextBlock Text="{Binding SelectedStatus.Status}" />
             </StackPanel>
             <Button Height="50"
                     Width="100"

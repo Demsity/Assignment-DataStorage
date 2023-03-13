@@ -44,8 +44,11 @@ namespace Assignment_DataStorage.Migrations
 
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>
                 {
-                    b.Property<int>("TicketId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -54,7 +57,12 @@ namespace Assignment_DataStorage.Migrations
                     b.Property<DateTime>("CommentCreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("TicketId");
+                    b.Property<int>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
 
                     b.ToTable("Comments", (string)null);
                 });
@@ -126,9 +134,6 @@ namespace Assignment_DataStorage.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
@@ -156,8 +161,8 @@ namespace Assignment_DataStorage.Migrations
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.CommentEntity", b =>
                 {
                     b.HasOne("Assignment_DataStorage.Models.Entities.TicketEntity", "Ticket")
-                        .WithOne("Comment")
-                        .HasForeignKey("Assignment_DataStorage.Models.Entities.CommentEntity", "TicketId")
+                        .WithMany()
+                        .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -199,11 +204,6 @@ namespace Assignment_DataStorage.Migrations
             modelBuilder.Entity("Assignment_DataStorage.Models.Entities.StatusEntity", b =>
                 {
                     b.Navigation("Tickets");
-                });
-
-            modelBuilder.Entity("Assignment_DataStorage.Models.Entities.TicketEntity", b =>
-                {
-                    b.Navigation("Comment");
                 });
 #pragma warning restore 612, 618
         }

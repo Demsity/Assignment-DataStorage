@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Assignment_DataStorage.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDataBase : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,6 @@ namespace Assignment_DataStorage.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TicketCreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CommentId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: false),
                     StatusId = table.Column<int>(type: "int", nullable: false)
@@ -94,13 +93,15 @@ namespace Assignment_DataStorage.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    TicketId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommentCreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CommentCreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TicketId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comments", x => x.TicketId);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Comments_Tickets_TicketId",
                         column: x => x.TicketId,
@@ -114,6 +115,11 @@ namespace Assignment_DataStorage.Migrations
                 table: "Branches",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_TicketId",
+                table: "Comments",
+                column: "TicketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customers_Email",
@@ -135,6 +141,32 @@ namespace Assignment_DataStorage.Migrations
                 name: "IX_Tickets_StatusId",
                 table: "Tickets",
                 column: "StatusId");
+
+            //Seed Data
+            migrationBuilder.InsertData(
+                table: "Branches",
+                columns: new[] { "Name", },
+                values: new object[] { "IT" });
+            migrationBuilder.InsertData(
+                table: "Branches",
+                columns: new[] { "Name", },
+                values: new object[] { "Finances" });
+            migrationBuilder.InsertData(
+                table: "Branches",
+                columns: new[] { "Name", },
+                values: new object[] { "Customers" });
+            migrationBuilder.InsertData(
+                table: "Status",
+                columns: new[] { "Status", },
+                values: new object[] { "Completed" });
+            migrationBuilder.InsertData(
+                table: "Status",
+                columns: new[] { "Status", },
+                values: new object[] { "Not Started" }); 
+            migrationBuilder.InsertData(
+                table: "Status",
+                columns: new[] { "Status", },
+                values: new object[] { "Started" });
         }
 
         /// <inheritdoc />

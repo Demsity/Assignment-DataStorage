@@ -12,7 +12,7 @@ internal class DataContext : DbContext
 {
     #region Configure
     // Not Secure!
-    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Simon\Dropbox\Plugg\Webb_.NET\WIN22\Course-5-Databases\Assignment-DataStorage\Assignment-DataStorage\Data\sql_db_local.mdf;Integrated Security=True;Connect Timeout=30";
+    private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Simon\Dropbox\Plugg\Webb_.NET\WIN22\Course-5-Databases\Assignment-DataStorage\Assignment-DataStorage\Data\sql-db-local.mdf;Integrated Security=True;Connect Timeout=30";
 
     // Remove if Dependency Injection
     public DataContext()
