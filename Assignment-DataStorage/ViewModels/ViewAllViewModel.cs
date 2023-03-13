@@ -118,14 +118,21 @@ public partial class ViewAllViewModel : ObservableObject
 	[RelayCommand]
 	private async void AddCommentToDB()
 	{
-		if (SelectedTicket != null && NewComment.Comment != null)
+		if (SelectedTicket.Id != null)
 		{
-            await CommentService.SaveCommentAsync(SelectedTicket, NewComment);
-			NewComment = new();
-			populateTicketsCollectionAsync();
+			if (NewComment.Comment != null)
+			{
+                await CommentService.SaveCommentAsync(SelectedTicket, NewComment);
+                NewComment = new();
+                populateTicketsCollectionAsync();
+            } else
+			{
+				MessageBox.Show("Please add a comment");
+			}
+
         }else
 		{
-			MessageBox.Show("Please Select Ticket and Add a new Comment");
+			MessageBox.Show("You need to save the ticket first to add a comment");
 		}
 
 	}
