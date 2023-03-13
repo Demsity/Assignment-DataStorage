@@ -91,6 +91,8 @@ namespace Assignment_DataStorage.Services
                         
                         _ticketModel.Comments.Add(new CommentModel
                         {
+                            Id = _comment.Id,
+                            TicketId = (int)_ticketModel.Id,
                             Comment = _comment.Comment,
                             CreatedAt = _comment.CommentCreatedAt
                         });

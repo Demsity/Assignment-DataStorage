@@ -38,6 +38,9 @@ public partial class ViewAllViewModel : ObservableObject
 	[ObservableProperty]
 	private StatusModel selectedStatus = null!;
 
+	[ObservableProperty]
+	private CommentModel selectedComment = null!;
+
     partial void OnSelectedTicketChanging(TicketModel value)
     {
 		if (value != null)
@@ -124,6 +127,13 @@ public partial class ViewAllViewModel : ObservableObject
 
 	}
 
+	[RelayCommand]
+	private async void DeleteComment()
+	{
+		await CommentService.DeleteCommentAsync(SelectedComment);
+		populateTicketsCollectionAsync();
+	}
+
 	public ViewAllViewModel()
 	{
 		Tickets = new();
@@ -133,6 +143,7 @@ public partial class ViewAllViewModel : ObservableObject
 		SelectedBranch= new();
 		SelectedStatus= new();
 		NewComment= new();
+		SelectedComment= new();
 		populateTicketsCollectionAsync();
 		populateBranchesCollectionAsync();
 		populateStatusesCollectionAsync();
